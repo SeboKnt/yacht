@@ -1,0 +1,43 @@
+#!ipxe
+
+dhcp
+
+echo next-server is ${next-server}
+echo filaneme is ${filename}
+echo MAC address is ${net0/mac}
+echo IP address is ${ip}
+
+set flavor lts
+echo flavor is ${flavor}
+
+set cmdline modules=loop,squashfs quiet
+echo cmdline is ${cmdline}
+set server http://${next-server}
+echo server is ${server}
+set vmlinuz ${server}/boot/vmlinuz-${flavor}
+echo vmlinuz is ${vmlinuz}
+set initramfs ${server}/boot/initramfs-${flavor}
+echo initramfs is ${initramfs}
+set modloop ${server}/boot/modloop-${flavor}
+echo modloop is ${modloop}
+
+set mirror http://dl-cdn.alpinelinux.org/alpine
+set branch v3.15
+set repo ${mirror}/${branch}/main
+echo repo is ${repo}
+
+set apkovl ${server}/mint.apkovl.tar.gz
+echo apkovl is ${apkovl}
+
+#Uncomment this if you want to see the information before continuing
+#prompt Press any key to continue
+
+#If you want to use Alpine bare, use this line:
+#kernel ${vmlinuz} ${cmdline} alpine_repo=${repo} modloop=${modloop} initrd=initramfs-${flavor}
+#If you want to use Alpine with an apkovl, use this line:
+kernel ${vmlinuz} ${cmdline} modloop=${modloop} apkovl=${apkovl} initrd=initramfs-${flavor}
+initrd ${initramfs}
+
+boot
+
+prompt Some error occurred, press any key to continue

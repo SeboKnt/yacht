@@ -1,0 +1,35 @@
+---
+- name: copy resolved.conf 
+  ansible.builtin.copy:
+    src: "resolved.conf"
+    dest: /etc/systemd/resolved.conf
+
+- name: copy dnsmasq.conf 
+  ansible.builtin.copy:
+    src: "dnsmasq.conf"
+    dest: /etc/dnsmasq.conf
+
+- name: Create a directory tftpboot if it does not exist
+  ansible.builtin.file:
+    path: /var/lib/tftpboot
+    state: directory
+
+- name: Reload service resolved, in all cases
+  ansible.builtin.systemd:
+    name: systemd-resolved.service
+    state: restarted
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - dnsmasq
+    - nginx
+    - git 
+    - make 
+    - binutils 
+    - mtools 
+    - perl
+    - libc-dev 
+    - gcc
+    - liblzma-dev
+    update_cache: yes

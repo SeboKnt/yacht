@@ -1,0 +1,38 @@
+---
+- name: Clone ipxe
+  ansible.builtin.git:
+    repo: https://github.com/ipxe/ipxe.git
+    dest: /root/ipxe
+    single_branch: yes
+    version: master
+
+- name: copy netboot.ipxe into the right path
+  ansible.builtin.copy:
+    src: "ipxe/netboot.ipxe"
+    dest: /root/ipxe/src/
+
+- name: Build bios target with extra arguments
+  make:
+    chdir: /root/ipxe/src/
+    target: bin-i386-pcbios/undionly.kpxe
+    params:
+      EMBED: netboot.ipxe
+
+- name: Build EFI64 target with extra arguments
+  make:
+    chdir: /root/ipxe/src/
+    target: bin-x86_64-efi/ipxe.efi
+    params:
+      EMBED: netboot.ipxe
+
+- name: Copy a undionly.kpxe file 
+  ansible.builtin.copy:
+    src: /root/ipxe/src/bin-i386-pcbios/undionly.kpxe
+    dest: /var/lib/tftpboot/undionly.kpxe
+    remote_src: yes
+
+- name: Copy a ipxe64.efi file
+  ansible.builtin.copy:
+    src: /root/ipxe/src/bin-x86_64-efi/ipxe.efi
+    dest: /var/lib/tftpboot/ipxe64.efi
+    remote_src: yes
