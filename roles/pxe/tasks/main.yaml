@@ -1,0 +1,76 @@
+---
+- name: copy resolved.conf into the right path
+  ansible.builtin.copy:
+    src: "resolved.conf"
+    dest: /etc/systemd/resolved.conf
+
+- name: copy dnsmasq.conf into the right path
+  ansible.builtin.copy:
+    src: "dnsmasq.conf"
+    dest: /etc/dnsmasq.conf
+
+- name: Create a directory tftpboot if it does not exist
+  ansible.builtin.file:
+    path: /var/lib/tftpboot/pxelinux.cfg
+    state: directory
+
+- name: Reload service resolved, in all cases
+  ansible.builtin.systemd:
+    name: systemd-resolved.service
+    state: restarted
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - curl
+    - mtr
+    - htop
+    - syslinux 
+    - pxelinux 
+    - dnsmasq
+    - nginx
+    - git 
+    - make 
+    - binutils 
+    - mtools 
+    - perl
+    - libc-dev 
+    - gcc
+    - liblzma-dev
+    update_cache: yes
+
+- name: Copy PXELINUX file
+  ansible.builtin.copy:
+    src: /usr/lib/PXELINUX/pxelinux.0
+    dest: /var/lib/tftpboot/pxelinux.0
+    remote_src: yes
+
+- name: Copy menu.c32 file
+  ansible.builtin.copy:
+    src: /usr/lib/syslinux/modules/bios/menu.c32
+    dest: /var/lib/tftpboot/menu.c32
+    remote_src: yes
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  ansible.builtin.unarchive:
+    src: http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/netboot.tar.gz
+    dest: /var/lib/tftpboot/
+    remote_src: yes
+
+- name: Allow all access to udp port 69 (tfp)
+  community.general.ufw:
+    rule: allow
+    port: '69'
+    proto: udp
+
+- name: Allow all access to udp port 67
+  community.general.ufw:
+    rule: allow
+    port: '67'
+    proto: udp
+
+- name: Allow all access to udp port 53 dns
+  community.general.ufw:
+    rule: allow
+    port: '53'
+    proto: udp

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - prep
+    - k3s
+    #- k3s/02FluxCD

@@ -1,0 +1,19 @@
+---
+- name: init K3s cluster
+  shell: echo "curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_cluster_token }} sh -s - server --cluster-init" >> /root/msg
+  when: inventory_hostname == init_node
+  vars:
+    init_node: "{{ groups['kubes'][0] }}"
+    init_ip: "{{ ansible_host }}"
+
+- name: add additional K3s master nodes
+  shell: echo "curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_cluster_token }} K3S_URL=https://{{ init_ip }}:6443 sh -s - server" >> /root/msg
+  when: inventory_hostname in groups['kubes'] and inventory_hostname != groups['kubes'][0]
+  vars:
+    init_ip: "{{ hostvars[groups['kubes'][0]].ansible_host }}"
+
+#- name: join worker nodes to cluster
+#  shell: curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_cluster_token }} sh -s - agent --server https://{{ init_ip }}:6443
+#  when: inventory_hostname in groups['worker']
+#  vars:
+#    init_ip: "{{ hostvars[groups['worker'][0]].ansible_host }}"

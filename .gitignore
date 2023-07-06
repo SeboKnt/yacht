@@ -1,0 +1,8 @@
+# wollen wir hier nicht!
+
+infrastructure/.terraform
+infrastructure/.terraform.lock.hcl
+infrastructure/.terraform.tfstate.lock.info
+infrastructure/terraform.tfstate
+infrastructure/terraform.tfstate.backup
+infrastructure/server_ips.yaml

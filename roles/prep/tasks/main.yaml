@@ -1,0 +1,8 @@
+---
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - curl
+    - mtr
+    - htop
+    update_cache: yes
