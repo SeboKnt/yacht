@@ -13,3 +13,12 @@ variable "lxc" {
         ip     = string
     }))
 }
+
+variable "vm" {
+    type = map(object({
+        vmid   = string
+        cores  = string
+        memory = string
+        mac    = string
+    }))
+}
