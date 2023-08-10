@@ -1,0 +1,11 @@
+#/media/cdrom/apks
+#http://dl-cdn.alpinelinux.org/alpine/v3.17/main
+#http://dl-cdn.alpinelinux.org/alpine/v3.17/community
+#http://dl-cdn.alpinelinux.org/alpine/edge/main
+#http://dl-cdn.alpinelinux.org/alpine/edge/community
+#http://dl-cdn.alpinelinux.org/alpine/edge/testing
+
+http://192.168.1.100/alpine/edge/main
+http://192.168.1.100/alpine/edge/community
+http://192.168.1.100/alpine/v3.17/main
+http://192.168.1.100/alpine/v3.17/community

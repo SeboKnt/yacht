@@ -1,0 +1,4 @@
+---
+- hosts: kubes
+  roles:
+    - k8s

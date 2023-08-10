@@ -11,6 +11,7 @@ variable "lxc" {
         swap   = string 
         size   = string
         ip     = string
+        boot   = string
     }))
 }
 

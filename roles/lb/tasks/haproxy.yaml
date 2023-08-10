@@ -1,0 +1,11 @@
+---
+- name: Update repositories and install packages
+  community.general.apk:
+    name: haproxy
+    update_cache: true
+
+- name: make haproxy start on boot and start now, if not started
+  ansible.builtin.service:
+    name: haproxy
+    enabled: true
+    state: started

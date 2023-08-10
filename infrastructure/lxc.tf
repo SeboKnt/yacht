@@ -7,7 +7,7 @@ resource "proxmox_lxc" "lxc" {
   ostemplate   = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
   password     = var.lcx_root_passwd
   start        = true
-  onboot       = false
+  onboot       = each.value.boot
   unprivileged = false
 
   ssh_public_keys = <<-EOT

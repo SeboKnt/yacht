@@ -6,3 +6,25 @@
     - mtr
     - htop
     update_cache: yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add a repo
+  ansible.builtin.lineinfile:
+    path: /etc/apk/repositories
+    line: http://dl-cdn.alpinelinux.org/alpine/v3.16/community
+    create: yes
+  when: ansible_distribution == 'Alpine'
+
+- name: Update repositories and install packages
+  community.general.apk:
+    name: curl, tar, python3, py3-pip
+    update_cache: true
+  when: ansible_distribution == 'Alpine'
+
+- name: Install python packages
+  pip:
+    name:
+      - pyyaml
+      - kubernetes 
+      - jmespath
+  when: ansible_distribution == 'Alpine'

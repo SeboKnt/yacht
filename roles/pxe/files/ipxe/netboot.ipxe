@@ -7,9 +7,7 @@ echo filaneme is ${filename}
 echo MAC address is ${net0/mac}
 echo IP address is ${ip}
 
-set flavor lts
-echo flavor is ${flavor}
-
+set flavor virt
 set cmdline modules=loop,squashfs quiet
 echo cmdline is ${cmdline}
 set server http://${next-server}
@@ -21,11 +19,6 @@ echo initramfs is ${initramfs}
 set modloop ${server}/boot/modloop-${flavor}
 echo modloop is ${modloop}
 
-set mirror http://dl-cdn.alpinelinux.org/alpine
-set branch v3.15
-set repo ${mirror}/${branch}/main
-echo repo is ${repo}
-
 set apkovl ${server}/mint.apkovl.tar.gz
 echo apkovl is ${apkovl}
 
@@ -33,7 +26,10 @@ echo apkovl is ${apkovl}
 #prompt Press any key to continue
 
 #If you want to use Alpine bare, use this line:
+#set repo http://192.168.1.100/alpine/v3.17/main
+#echo repo is ${repo}
 #kernel ${vmlinuz} ${cmdline} alpine_repo=${repo} modloop=${modloop} initrd=initramfs-${flavor}
+
 #If you want to use Alpine with an apkovl, use this line:
 kernel ${vmlinuz} ${cmdline} modloop=${modloop} apkovl=${apkovl} initrd=initramfs-${flavor}
 initrd ${initramfs}

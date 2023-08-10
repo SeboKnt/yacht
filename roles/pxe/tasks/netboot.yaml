@@ -1,13 +1,18 @@
 -
-- name: Download Alpine Linux Netboot
+- name: Download Alpine Linux Netboot // https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-netboot-3.18.2-x86_64.tar.gz
   ansible.builtin.unarchive:
-    src: https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-netboot-3.18.2-x86_64.tar.gz
+    src: http://192.168.1.100/alpine/v3.17/releases/x86_64/alpine-netboot-3.17.4-x86_64.tar.gz 
     dest: /var/www/html
     remote_src: yes
 
 - name: Change initramfs-lts ownership
   ansible.builtin.file:
     path: /var/www/html/boot/initramfs-lts
+    mode: '0777'
+
+- name: Change initramfs-virt ownership
+  ansible.builtin.file:
+    path: /var/www/html/boot/initramfs-virt
     mode: '0777'
 
 - name: copy akpovol into the right path

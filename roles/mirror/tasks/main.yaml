@@ -1,0 +1,34 @@
+---
+
+- name: Set timezone to Berlin
+  community.general.timezone:
+    name: Europe/Berlin
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - nginx
+    - rsync
+    update_cache: yes
+
+- name: Create a directory alpine if it does not exist
+  ansible.builtin.file:
+    path: /var/www/html/alpine
+    state: directory
+
+- name: copy alpine-mirror.v2.sh 
+  ansible.builtin.copy:
+    src: "alpine-mirror.v2.sh"
+    dest: /root/
+
+- name: Creates an entry like "0 4 * * bash /root/alpine-mirror.v2.sh"
+  ansible.builtin.cron:
+    name: "check dirs"
+    minute: "0"
+    hour: "4"
+    job: "bash /root/alpine-mirror.v2.sh"
+
+- name: copy size.sh 
+  ansible.builtin.copy:
+    src: "size.sh"
+    dest: /root/

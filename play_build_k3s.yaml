@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: kubes
   roles:
     - prep
     - k3s

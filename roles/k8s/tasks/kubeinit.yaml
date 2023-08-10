@@ -1,0 +1,51 @@
+---
+- name: copy apk file 
+  ansible.builtin.copy:
+    src: "apk/repositories"
+    dest: /etc/apk/repositories
+
+- name: Update repositories and install packages
+  community.general.apk:
+    name: kubelet, kubeadm, kubectl, docker
+    update_cache: true
+
+- name: make docker start on boot and start now, if not started
+  ansible.builtin.service:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Make kubelet start on boot and start now, if not started.
+  ansible.builtin.service:
+    name: kubelet
+    enabled: true
+    state: started
+
+- name: prepull images
+  shell: kubeadm config images pull
+
+#- name: init K8s cluster
+#  shell: kubeadm init --node-name={{ ansible_host }}
+#  when: inventory_hostname == init_node
+#  vars:
+#    init_node: "{{ groups['kubes'][0] }}"
+#    init_ip: "{{ ansible_host }}"
+
+
+# kubeadm config images pull --image-repository string     Default: "registry.k8s.io"
+#kubeadm init --control-plane-endpoint "192.168.1.199" --upload-certs --node-name "192.168.1.111" --pod-network-cidr "10.244.0.0/16" 
+ 
+# mkdir /root/.kube
+# cp /etc/kubernetes/admin.conf /root/.kube/config
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+
+
+kubeadm join 192.168.1.199:6443 --token lzr5n3.ht6fo5kjjyjrw6gy \
+        --discovery-token-ca-cert-hash sha256:dad231b0e599d175ca1994ef576bf84fca62a2b861fe7cacd1c2d5532d8558ae \
+        --control-plane --certificate-key a5391326081160971cd835394e88c37db53f95bac9578567a354afc53a7c4c87 \
+        --node-name "192.168.1.112"
+
+kubeadm join 192.168.1.199:6443 --token lzr5n3.ht6fo5kjjyjrw6gy \
+        --discovery-token-ca-cert-hash sha256:dad231b0e599d175ca1994ef576bf84fca62a2b861fe7cacd1c2d5532d8558ae \
+        --node-name "192.168.1.114"

@@ -1,0 +1,24 @@
+---
+- name: Create a directory keepalived if it does not exist
+  ansible.builtin.file:
+    path: /etc/keepalived/
+    state: directory
+
+- name: copy keepalived.conf file 
+  ansible.builtin.copy:
+    src: "keepalived/keepalived.conf"
+    dest: /etc/keepalived/keepalived.conf
+
+- name: Update repositories and install packages
+  community.general.apk:
+    name: keepalived
+    update_cache: true
+
+- name: make keepalived start on boot and start now, if not started
+  ansible.builtin.service:
+    name: keepalived
+    enabled: true
+    state: started
+  when: inventory_hostname == init_node
+  vars:
+    init_node: "{{ groups['kubes'][0] }}"
